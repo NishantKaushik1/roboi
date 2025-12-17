@@ -4,7 +4,15 @@ import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts';
 import { useEffect, useState } from 'react';
 
-export default function MapChart({ data, height = '500px', center, zoom, className }) {
+interface MapChartProps {
+    data: any[];
+    height?: string;
+    center?: number[];
+    zoom?: number;
+    className?: string;
+}
+
+export default function MapChart({ data, height = '500px', center, zoom, className }: MapChartProps) {
     const [isMapLoaded, setIsMapLoaded] = useState(false);
 
     useEffect(() => {

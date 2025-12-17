@@ -7,10 +7,17 @@ import { useEffect, useState } from 'react';
  * BaseChart Component
  * A wrapper around ReactECharts to handle responsiveness and theming.
  */
-export default function BaseChart({ option, height = '300px', className, onEvents }) {
+interface BaseChartProps {
+    option: any;
+    height?: string;
+    className?: string;
+    onEvents?: Record<string, Function>;
+}
+
+export default function BaseChart({ option, height = '300px', className, onEvents }: BaseChartProps) {
     const [mounted, setMounted] = useState(false);
     // Simple check for dark mode if needed, or just default to light for now to fix build
-    const theme = 'light';
+    const theme: string = 'light';
 
     useEffect(() => {
         setMounted(true);

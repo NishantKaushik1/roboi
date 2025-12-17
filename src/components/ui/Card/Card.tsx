@@ -1,10 +1,28 @@
+
 import { clsx } from 'clsx';
+import React from 'react'; // Assuming React is used for React.ReactNode
+
+interface CardProps {
+  title?: string;
+  subtitle?: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+  className?: string;
+  bodyClassName?: string;
+}
 
 /**
  * Card Component
  * Reusable card container with optional header and footer
  */
-export default function Card({ children, className, title, subtitle, footer }) {
+export default function Card({
+  title,
+  subtitle,
+  children,
+  footer,
+  className,
+  bodyClassName,
+}: CardProps) {
   return (
     <div
       className={clsx(

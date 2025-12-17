@@ -5,6 +5,16 @@ import { clsx } from "clsx";
  * Displays a metric with label, value, and optional trend
  * Matches design: "Nayara Admin Side"
  */
+interface StatsCardProps {
+  label: string;
+  value: string | number;
+  trend?: number;
+  trendLabel?: string;
+  icon?: React.ElementType;
+  isActive?: boolean;
+  className?: string;
+}
+
 export default function StatsCard({
   label,
   value,
@@ -13,7 +23,7 @@ export default function StatsCard({
   icon: Icon,
   isActive = false,
   className,
-}) {
+}: StatsCardProps) {
   return (
     <div
       className={clsx(
