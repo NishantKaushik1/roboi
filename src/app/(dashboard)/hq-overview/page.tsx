@@ -8,7 +8,15 @@ import MapChart from '@/components/charts/MapChart';
 import BarChart from '@/components/charts/BarChart';
 import DonutChart from '@/components/charts/DonutChart';
 
+import { useRouter } from 'next/navigation';
+
 export default function HQOverviewPage() {
+  const router = useRouter();
+
+  const handleOpenClick = (item: any) => {
+    router.push(`/hq-overview/${item.name.toLowerCase()}`);
+  };
+
   // 1. Stats Data
   const stats = [
     { label: 'Total Petrol Pumps', value: '29,697', trend: 0.8 },
@@ -95,7 +103,7 @@ export default function HQOverviewPage() {
       </div>
 
       {/* 2. Map & Distribution Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px]">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px] max-md:h-auto">
         {/* Map Section */}
         <Card title="Nayara Petrol Pumps (Map View)" className="lg:col-span-2 h-full flex flex-col">
           <div className="h-full w-full">
@@ -110,7 +118,11 @@ export default function HQOverviewPage() {
 
         {/* Distribution List */}
         <div className="h-full">
-          <StateDistributionList data={distributionData} className="h-full rounded-lg border border-gray-200 shadow-sm" />
+          <StateDistributionList
+            data={distributionData}
+            className="h-full rounded-lg border border-gray-200 shadow-sm"
+            onOpenClick={handleOpenClick}
+          />
         </div>
       </div>
 
