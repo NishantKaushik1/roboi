@@ -1,0 +1,85 @@
+'use client';
+
+import ReactECharts from 'echarts-for-react';
+import * as echarts from 'echarts';
+import { useEffect, useState } from 'react';
+
+interface MapChartProps {
+    data: any[];
+    height?: string;
+    center?: number[];
+    zoom?: number;
+    className?: string;
+}
+
+export default function MapChart({ data, height = '500px', center, zoom, className }: MapChartProps) {
+    const [isMapLoaded, setIsMapLoaded] = useState(false);
+
+    useEffect(() => {
+        // Fetch India GeoJSON client-side
+        // Using a reliable source for India map with states
+        fetch('https://raw.githubusercontent.com/Subhash9325/GeoJson-Data-of-Indian-States/master/Indian_States')
+            .then((response) => response.json())
+            .then((geoJson) => {
+                echarts.registerMap('INDIA', geoJson);
+                setIsMapLoaded(true);
+            })
+            .catch((err) => console.error('Failed to load map data', err));
+    }, []);
+
+    if (!isMapLoaded) {
+        return (
+            <div className="flex items-center justify-center bg-gray-50 rounded-lg text-gray-500" style={{ height }}>
+                Loading Map...
+            </div>
+        );
+    }
+
+    const option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: '{b}: {c} Pumps',
+        },
+        visualMap: {
+            min: 0,
+            max: 3000,
+            left: 'right',
+            bottom: '10%',
+            text: ['High', 'Low'],
+            calculable: true,
+            inRange: {
+                color: ['#E0F2FE', '#0284C7'], // Light blue to Brand Blue
+            },
+        },
+        series: [
+            {
+                name: 'Petrol Pumps',
+                type: 'map',
+                map: 'INDIA',
+                roam: true,
+                center: center, // Use passed prop or undefined (auto)
+                zoom: zoom,     // Use passed prop or undefined (auto)
+                label: {
+                    show: false,
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                    },
+                    itemStyle: {
+                        areaColor: '#FBBF24', // Amber highlight
+                    },
+                },
+                data: data,
+            },
+        ],
+    };
+
+    return (
+        <ReactECharts
+            option={option}
+            style={{ height: '100%', width: '100%' }}
+            className={className || "w-full"}
+        />
+    );
+}
