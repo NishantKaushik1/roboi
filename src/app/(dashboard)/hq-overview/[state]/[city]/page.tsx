@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Card from '@/components/ui/Card/Card';
 import CityMap from '@/components/charts/CityMap';
 import LineChart from '@/components/charts/LineChart';
@@ -56,6 +56,11 @@ export default function CityPage() {
     );
 
     const { hours, values } = generateHourlyData();
+    const router = useRouter();
+
+    const handleOpenClick = (item: any) => {
+        router.push(`/hq-overview/${stateName.toLowerCase()}/${cityName.toLowerCase()}/${item.name.toLowerCase()}`);
+    };
 
     return (
         <div className="flex h-full flex-col gap-6 p-6">
@@ -92,6 +97,7 @@ export default function CityPage() {
                                 data={MOCK_ROS}
                                 title={`${cityName} ROs`}
                                 className="bg-transparent"
+                                onOpenClick={handleOpenClick}
                             />
                         </div>
                     </div>
