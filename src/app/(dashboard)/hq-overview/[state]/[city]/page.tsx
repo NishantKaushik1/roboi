@@ -1,8 +1,8 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Card from '@/components/ui/Card/Card';
-import SingleStateMap from '@/components/charts/SingleStateMap';
+import CityMap from '@/components/charts/CityMap';
 import LineChart from '@/components/charts/LineChart';
 import BarChart from '@/components/charts/BarChart';
 import DonutChart from '@/components/charts/DonutChart';
@@ -11,53 +11,61 @@ import SummaryTable from '@/components/widgets/summary/StateSummaryTable';
 import { HiArrowLeft } from 'react-icons/hi2';
 import Link from 'next/link';
 
-// Mock Data Generators
+// Mock Data Generators for City View
 const generateHourlyData = () => {
     const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
     const values = hours.map(() => Math.floor(Math.random() * 20) + 5);
     return { hours, values };
 };
 
-const MOCK_CITIES = [
-    { name: 'Mumbai', count: 2750, riskLevel: 'High', color: 'bg-red-500' },
-    { name: 'Pune', count: 2750, riskLevel: 'Medium', color: 'bg-yellow-500' },
-    { name: 'Nagpur', count: 2750, riskLevel: 'Low', color: 'bg-green-500' },
-    { name: 'Nashik', count: 2750, riskLevel: 'High', color: 'bg-red-500' },
-    { name: 'Ahmadnagar', count: 2750, riskLevel: 'Low', color: 'bg-green-500' },
-    { name: 'Kolhapur', count: 2750, riskLevel: 'Medium', color: 'bg-yellow-500' },
-    { name: 'Sangli', count: 2750, riskLevel: 'Low', color: 'bg-green-500' },
+const MOCK_ROS = [
+    { name: 'NE-MU-RO-1001', count: 12, riskLevel: 'High', color: 'bg-red-500' }, // count here implies incidents? Or just an ID list. DistributionList expects 'count'
+    { name: 'NE-MU-RO-1002', count: 5, riskLevel: 'Low', color: 'bg-green-500' },
+    { name: 'NE-MU-RO-1003', count: 8, riskLevel: 'Medium', color: 'bg-yellow-500' },
+    { name: 'NE-MU-RO-1004', count: 15, riskLevel: 'High', color: 'bg-red-500' },
+    { name: 'NE-MU-RO-1005', count: 3, riskLevel: 'Low', color: 'bg-green-500' },
+    { name: 'NE-MU-RO-1006', count: 6, riskLevel: 'Medium', color: 'bg-yellow-500' },
+    { name: 'NE-MU-RO-1007', count: 1, riskLevel: 'Low', color: 'bg-green-500' },
+    { name: 'NE-MU-RO-1008', count: 20, riskLevel: 'High', color: 'bg-red-500' },
+    { name: 'NE-MU-RO-1009', count: 4, riskLevel: 'Low', color: 'bg-green-500' },
+    { name: 'NE-MU-RO-1010', count: 9, riskLevel: 'Medium', color: 'bg-yellow-500' },
 ];
 
 const MOCK_SUMMARY = [
-    { state: 'GJ', incidents: 128, uptime: 96.0 }, // using 'state' key for reuse, label will be "City"
-    { state: 'MH', incidents: 171, uptime: 92.0 },
-    { state: 'DL', incidents: 74, uptime: 98.0 },
-    { state: 'RJ', incidents: 88, uptime: 90.0 },
-    { state: 'UP', incidents: 142, uptime: 89.0 },
-].map(d => ({ ...d, state: d.state === 'GJ' ? 'Mumbai' : d.state === 'MH' ? 'Pune' : 'Nagpur' })); // quick hack to change names
+    { name: 'NE-MU-RO-1001', incidents: 12, uptime: 96.0 },
+    { name: 'NE-MU-RO-1002', incidents: 5, uptime: 98.5 },
+    { name: 'NE-MU-RO-1003', incidents: 8, uptime: 92.0 },
+    { name: 'NE-MU-RO-1004', incidents: 15, uptime: 88.0 },
+    { name: 'NE-MU-RO-1005', incidents: 3, uptime: 99.0 },
+    { name: 'NE-MU-RO-1006', incidents: 6, uptime: 94.5 },
+    { name: 'NE-MU-RO-1007', incidents: 1, uptime: 99.8 },
+    { name: 'NE-MU-RO-1008', incidents: 20, uptime: 85.0 },
+];
 
-export default function StatePage() {
+export default function CityPage() {
     const params = useParams();
-    const router = useRouter();
     const stateParam = params.state;
+    const cityParam = params.city;
+
+    // Safely decode params
     const stateName = decodeURIComponent(
         (Array.isArray(stateParam) ? stateParam[0] : stateParam) || 'Maharashtra'
     );
-    const { hours, values } = generateHourlyData();
+    const cityName = decodeURIComponent(
+        (Array.isArray(cityParam) ? cityParam[0] : cityParam) || 'Mumbai'
+    );
 
-    const handleOpenClick = (item: any) => {
-        router.push(`/hq-overview/${stateName.toLowerCase()}/${item.name.toLowerCase()}`);
-    };
+    const { hours, values } = generateHourlyData();
 
     return (
         <div className="flex h-full flex-col gap-6 p-6">
             {/* Breadcrumb & Header */}
             <div className="flex flex-col gap-1">
-                <Link href="/hq-overview" className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700">
+                <Link href={`/hq-overview/${stateName.toLowerCase()}`} className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700">
                     <HiArrowLeft className="h-3 w-3" />
-                    Back HQ Overview/ State wise
+                    Back HQ Overview/ {stateName}
                 </Link>
-                <h1 className="text-xl font-bold text-[#1C2347] dark:text-white capitalize">{stateName}- ROs</h1>
+                <h1 className="text-xl font-bold text-[#1C2347] dark:text-white capitalize">{cityName} - ROs</h1>
             </div>
 
             {/* Top Section: Map Card + Right Stats Block */}
@@ -70,21 +78,20 @@ export default function StatePage() {
                             <div className="mb-4">
                                 <div className="flex items-center gap-2">
                                     <div className="h-2 w-2 rounded-full bg-blue-600"></div>
-                                    <span className="font-bold text-[#1C2347] dark:text-white capitalize">{stateName}</span>
+                                    <span className="font-bold text-[#1C2347] dark:text-white capitalize">{cityName}</span>
                                 </div>
-                                <div className="text-2xl font-bold text-[#1C2347] dark:text-white mt-1">2087 <span className="text-xs font-normal text-[#595959]">ROs</span></div>
+                                <div className="text-2xl font-bold text-[#1C2347] dark:text-white mt-1">1087 <span className="text-xs font-normal text-[#595959]">ROs</span></div>
                             </div>
                             <div className="flex-1 w-full relative">
-                                <SingleStateMap stateName={stateName} height="100%" />
+                                <CityMap cityName={cityName} height="100%" />
                             </div>
                         </div>
                         {/* List Part */}
                         <div className="w-1/2 h-full max-md:w-full">
                             <DistributionList
-                                data={MOCK_CITIES}
-                                title="City wise Distribution"
+                                data={MOCK_ROS}
+                                title={`${cityName} ROs`}
                                 className="bg-transparent"
-                                onOpenClick={handleOpenClick}
                             />
                         </div>
                     </div>
@@ -168,7 +175,7 @@ export default function StatePage() {
 
             {/* Bottom: Summary Table */}
             <Card subtitle="City wise Summary" className="flex flex-col">
-                <SummaryTable data={MOCK_SUMMARY} entityLabel="City" />
+                <SummaryTable data={MOCK_SUMMARY} entityLabel="RO Name" />
             </Card>
         </div>
     );

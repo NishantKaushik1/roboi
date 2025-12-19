@@ -4,6 +4,8 @@ import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts';
 import { useEffect, useState } from 'react';
 
+import { useTheme } from '@/hooks/useTheme';
+
 interface MapChartProps {
     data: any[];
     height?: string;
@@ -13,7 +15,9 @@ interface MapChartProps {
 }
 
 export default function MapChart({ data, height = '500px', center, zoom, className }: MapChartProps) {
+    const { isDark } = useTheme();
     const [isMapLoaded, setIsMapLoaded] = useState(false);
+    const textColor = isDark ? '#9F9F9F' : '#333';
 
     useEffect(() => {
         // Fetch India GeoJSON client-side
@@ -29,7 +33,7 @@ export default function MapChart({ data, height = '500px', center, zoom, classNa
 
     if (!isMapLoaded) {
         return (
-            <div className="flex items-center justify-center bg-gray-50 rounded-lg text-gray-500" style={{ height }}>
+            <div className="flex items-center justify-center bg-gray-50 rounded-lg text-[#595959] dark:text-[#9F9F9F]" style={{ height }}>
                 Loading Map...
             </div>
         );
@@ -46,6 +50,7 @@ export default function MapChart({ data, height = '500px', center, zoom, classNa
             left: 'right',
             bottom: '10%',
             text: ['High', 'Low'],
+            textStyle: { color: textColor },
             calculable: true,
             inRange: {
                 color: ['#E0F2FE', '#0284C7'], // Light blue to Brand Blue

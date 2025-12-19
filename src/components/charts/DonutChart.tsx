@@ -1,8 +1,12 @@
 'use client';
 
 import BaseChart from './BaseChart';
+import { useTheme } from '@/hooks/useTheme';
 
 export default function DonutChart({ data, height = '300px' }) {
+    const { isDark } = useTheme();
+    const textColor = isDark ? '#9F9F9F' : '#6B7280';
+
     const option = {
         tooltip: {
             trigger: 'item',
@@ -14,6 +18,7 @@ export default function DonutChart({ data, height = '300px' }) {
             icon: 'circle',
             itemWidth: 8,
             itemHeight: 8,
+            textStyle: { color: textColor }
         },
         series: [
             {
@@ -24,7 +29,7 @@ export default function DonutChart({ data, height = '300px' }) {
                 avoidLabelOverlap: false,
                 itemStyle: {
                     borderRadius: 0,
-                    borderColor: '#fff',
+                    borderColor: isDark ? '#111827' : '#fff', // match background
                     borderWidth: 2,
                 },
                 label: {
@@ -36,6 +41,7 @@ export default function DonutChart({ data, height = '300px' }) {
                         show: true,
                         fontSize: 20,
                         fontWeight: 'bold',
+                        color: isDark ? '#fff' : '#333'
                     },
                 },
                 labelLine: {

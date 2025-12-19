@@ -1,7 +1,7 @@
 'use client';
 
 import BaseChart from './BaseChart';
-
+import { useTheme } from '@/hooks/useTheme';
 export default function BarChart({
     data,
     categories,
@@ -10,7 +10,10 @@ export default function BarChart({
     colors = ['#EF4444', '#F59E0B', '#10B981', '#3B82F6'], // Default to red, yellow, green, blue
     height = '300px'
 }) {
+    const { isDark } = useTheme();
     const isHorizontal = horizontal;
+    const textColor = isDark ? '#9F9F9F' : '#6B7280';
+    const splitLineColor = isDark ? '#374151' : '#E5E7EB';
 
     // Transform data for ECharts series
     const series = data.map((item, index) => ({
@@ -43,6 +46,7 @@ export default function BarChart({
             icon: 'circle',
             itemWidth: 8,
             itemHeight: 8,
+            textStyle: { color: textColor }
         },
         grid: {
             left: '3%',
@@ -52,11 +56,29 @@ export default function BarChart({
             containLabel: true,
         },
         xAxis: isHorizontal
-            ? { type: 'value', splitLine: { show: true, lineStyle: { type: 'dashed' } } }
-            : { type: 'category', data: categories, axisTick: { show: false } },
+            ? {
+                type: 'value',
+                splitLine: { show: true, lineStyle: { type: 'dashed', color: splitLineColor } },
+                axisLabel: { color: textColor }
+            }
+            : {
+                type: 'category',
+                data: categories,
+                axisTick: { show: false },
+                axisLabel: { color: textColor }
+            },
         yAxis: isHorizontal
-            ? { type: 'category', data: categories, axisTick: { show: false } }
-            : { type: 'value', splitLine: { show: true, lineStyle: { type: 'dashed' } } },
+            ? {
+                type: 'category',
+                data: categories,
+                axisTick: { show: false },
+                axisLabel: { color: textColor }
+            }
+            : {
+                type: 'value',
+                splitLine: { show: true, lineStyle: { type: 'dashed', color: splitLineColor } },
+                axisLabel: { color: textColor }
+            },
         series: series,
     };
 

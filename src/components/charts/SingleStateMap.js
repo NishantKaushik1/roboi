@@ -4,7 +4,10 @@ import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts';
 import { useEffect, useState } from 'react';
 
+import { useTheme } from '@/hooks/useTheme';
+
 export default function SingleStateMap({ stateName, data = [], height = '400px', className = '' }) {
+    const { isDark } = useTheme();
     const [isMapLoaded, setIsMapLoaded] = useState(false);
     const [mapName, setMapName] = useState(null);
 
@@ -43,7 +46,7 @@ export default function SingleStateMap({ stateName, data = [], height = '400px',
 
     if (!isMapLoaded || !mapName) {
         return (
-            <div className="flex items-center justify-center bg-gray-50 rounded-lg text-gray-500" style={{ height }}>
+            <div className="flex items-center justify-center bg-gray-50 rounded-lg text-[#595959]" style={{ height }}>
                 Loading {stateName}...
             </div>
         );

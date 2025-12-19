@@ -21,7 +21,7 @@ export default function HQOverviewPage() {
   const stats = [
     { label: 'Total Petrol Pumps', value: '29,697', trend: 0.8 },
     { label: 'States Covered', value: '20', trend: 0.8 },
-    { label: 'Highest Presence', value: 'Uttar Pradesh', isActive: true }, // Highlighted
+    { label: 'Highest Presence', value: 'Uttar Pradesh' }, // Highlighted
     { label: 'Lowest Presence', value: 'Sikkim' },
     { label: 'Incidents (24h)', value: '243', trend: 0.6, trendLabel: 'vs yesterday' },
     { label: 'Vehicles (24h)', value: '4,891', trend: 0.6 },
@@ -88,7 +88,7 @@ export default function HQOverviewPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-6 dark:bg-gray-950 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-gray-900 dark:text-white">HQ Overview</h1>
+        <h1 className="text-xl font-[600] text-[#1C2347] dark:text-white">HQ Overview</h1>
         {/* Search Placeholder */}
         <div className="w-64">
           {/* Can add global search here */}
@@ -103,7 +103,7 @@ export default function HQOverviewPage() {
       </div>
 
       {/* 2. Map & Distribution Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px] max-md:h-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px] max-lg:h-auto">
         {/* Map Section */}
         <Card title="Nayara Petrol Pumps (Map View)" className="lg:col-span-2 h-full flex flex-col">
           <div className="h-full w-full">
@@ -128,8 +128,9 @@ export default function HQOverviewPage() {
 
       {/* 3. Summary Table */}
       <div>
-        <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Statewise Summary</h3>
-        <StateSummaryTable data={summaryData} />
+        <Card title="Statewise Summary">
+          <StateSummaryTable data={summaryData} />
+        </Card>
       </div>
 
       {/* 4. Bottom Charts Row */}

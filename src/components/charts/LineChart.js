@@ -2,7 +2,7 @@
 
 import BaseChart from './BaseChart';
 import * as echarts from 'echarts';
-
+import { useTheme } from '@/hooks/useTheme';
 export default function LineChart({
     data,
     xAxisData,
@@ -11,6 +11,10 @@ export default function LineChart({
     color = '#2563EB', // blue-600
     areaColor,
 }) {
+    const { isDark } = useTheme();
+    const textColor = isDark ? '#9F9F9F' : '#6B7280';
+    const splitLineColor = isDark ? '#374151' : '#E5E7EB'; // darker gray for dark mode
+
     const option = {
         tooltip: {
             trigger: 'axis',
@@ -36,7 +40,7 @@ export default function LineChart({
                 show: false,
             },
             axisLabel: {
-                color: '#6B7280',
+                color: textColor,
                 fontSize: 10,
             },
         },
@@ -47,12 +51,12 @@ export default function LineChart({
             },
             splitLine: {
                 lineStyle: {
-                    color: '#E5E7EB', // gray-200
+                    color: splitLineColor,
                     type: 'dashed',
                 },
             },
             axisLabel: {
-                color: '#6B7280',
+                color: textColor,
                 fontSize: 10,
             },
         },
