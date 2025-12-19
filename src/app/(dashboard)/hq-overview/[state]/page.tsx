@@ -167,7 +167,7 @@ export default function StatePage() {
             </div>
 
             {/* Bottom: Summary Table */}
-            <Card subtitle="City wise Summary" className="flex flex-col">
+            <Card title="City wise Summary" className="flex flex-col">
                 <SummaryTable data={MOCK_SUMMARY} entityLabel="City" />
             </Card>
         </div>
