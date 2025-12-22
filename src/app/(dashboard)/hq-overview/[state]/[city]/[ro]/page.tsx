@@ -43,9 +43,11 @@ export default function RoDashboard() {
                             <span className="text-xs text-[#595959] dark:text-[#9F9F9F]">Pump-27 — Viman Nagar | Today • Local time 09:41</span>
                         </div>
                     </div>
-                    <button className="bg-[#095396] text-white px-4 py-1.5 rounded text-xs font-medium hover:bg-blue-800 transition-colors">
-                        ANPR Vehicles
-                    </button>
+                    <Link href={`/hq-overview/${stateName.toLowerCase()}/${cityName.toLowerCase()}/${roId}/anpr-vehicles`}>
+                        <button className="bg-[#095396] text-white px-4 py-1.5 rounded text-xs font-medium hover:bg-blue-800 transition-colors">
+                            ANPR Vehicles
+                        </button>
+                    </Link>
                 </div>
 
                 {/* Top Stats Cards */}

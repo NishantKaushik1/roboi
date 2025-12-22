@@ -17,10 +17,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${barlow.className} flex h-screen flex-col overflow-hidden bg-gray-50 dark:bg-gray-950`}>
-        <Header />
-        <main className="flex-1 overflow-y-auto">
-          {children}
-        </main>
+        {children}
       </body>
     </html>
   );
