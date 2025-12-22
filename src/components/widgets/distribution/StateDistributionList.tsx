@@ -17,8 +17,8 @@ interface DistributionListProps {
     data: DistributionData[];
     className?: string;
     title?: string;
-    onItemClick?: (item: DistributionData) => void;
-    onOpenClick?: (item: DistributionData) => void;
+    onItemClick?: (_item: DistributionData) => void;
+    onOpenClick?: (_item: DistributionData) => void;
 }
 
 export default function DistributionList({

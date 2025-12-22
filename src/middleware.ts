@@ -16,15 +16,15 @@ export function middleware(request) {
   const { pathname } = request.nextUrl;
 
   // Get authentication token from cookies
-  const token = request.cookies.get('auth_token')?.value;
+  // const token = request.cookies.get('auth_token')?.value;
 
   // Define public routes (no auth required)
   const publicRoutes = ['/login', '/forgot-password'];
-  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
+  // const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
 
   // Define protected routes (auth required)
   const protectedRoutes = ['/hq-overview', '/state-wise', '/city-wise', '/anpr-vehicles', '/vehicle-profile'];
-  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
+  // const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
 
   // TODO: Uncomment these lines when authentication is implemented
   // Redirect to login if accessing protected route without token

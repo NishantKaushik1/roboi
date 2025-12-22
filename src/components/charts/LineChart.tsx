@@ -65,10 +65,10 @@ export default function LineChart({
                 showSymbol: false,
                 lineStyle: {
                     width: 3,
-                    color: color,
+                    color,
                 },
                 itemStyle: {
-                    color: color,
+                    color,
                 },
                 areaStyle: areaColor
                     ? {
@@ -78,7 +78,7 @@ export default function LineChart({
                         ]),
                     }
                     : undefined,
-                data: data,
+                data,
             },
         ];
 
@@ -110,7 +110,7 @@ export default function LineChart({
             axisTick: { show: false },
             axisLabel: {
                 color: textColor,
-                fontSize: 10,
+                fontSize: 12,
             },
         },
         yAxis: {
@@ -124,10 +124,10 @@ export default function LineChart({
             },
             axisLabel: {
                 color: textColor,
-                fontSize: 10,
+                fontSize: 12,
             },
         },
-        series: series,
+        series,
     };
 
     return <BaseChart option={option} height={height} />;

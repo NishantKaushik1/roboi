@@ -62,8 +62,8 @@ export default function MapChart({ data, height = '500px', center, zoom, classNa
                 type: 'map',
                 map: 'INDIA',
                 roam: true,
-                center: center, // Use passed prop or undefined (auto)
-                zoom: zoom,     // Use passed prop or undefined (auto)
+                center, // Use passed prop or undefined (auto)
+                zoom,     // Use passed prop or undefined (auto)
                 label: {
                     show: false,
                 },
@@ -75,7 +75,7 @@ export default function MapChart({ data, height = '500px', center, zoom, classNa
                         areaColor: '#FBBF24', // Amber highlight
                     },
                 },
-                data: data,
+                data,
             },
         ],
     };

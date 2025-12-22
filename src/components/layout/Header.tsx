@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { HiChevronDown, HiUser, HiArrowRightOnRectangle, HiMoon, HiSun } from 'react-icons/hi2';
+import { HiUser, HiArrowRightOnRectangle, HiMoon, HiSun } from 'react-icons/hi2';
 
 export default function Header({
-    logoUrl = '/nayara-logo.png',
+    // logoUrl = '/nayara-logo.png',
     title = 'Nayara Admin Side',
     subtitle = 'Video Analytics · 7,000+ Pumps · Real-Time AI',
     user = { name: 'Admin User', email: 'admin@nayara.com', avatar: null }

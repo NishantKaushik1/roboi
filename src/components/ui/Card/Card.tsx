@@ -8,7 +8,7 @@ interface CardProps {
   children: React.ReactNode;
   footer?: React.ReactNode;
   className?: string;
-  bodyClassName?: string;
+  // bodyClassName?: string;
 }
 
 /**
@@ -21,7 +21,7 @@ export default function Card({
   children,
   footer,
   className,
-  bodyClassName,
+  // bodyClassName,
 }: CardProps) {
   return (
     <div

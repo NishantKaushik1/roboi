@@ -79,7 +79,7 @@ export default function BarChart({
                 splitLine: { show: true, lineStyle: { type: 'dashed', color: splitLineColor } },
                 axisLabel: { color: textColor }
             },
-        series: series,
+        series,
     };
 
     return <BaseChart option={option} height={height} />;

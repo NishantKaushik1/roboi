@@ -1,10 +1,9 @@
 import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts';
 import { useEffect, useState } from 'react';
-import { useTheme } from '@/hooks/useTheme';
+
 
 export default function CityMap({ cityName, height = '400px', className = '' }) {
-    const { isDark } = useTheme();
     const [isMapLoaded, setIsMapLoaded] = useState(false);
     const [mapName, setMapName] = useState(null);
     const [error, setError] = useState(false);
@@ -56,10 +55,10 @@ export default function CityMap({ cityName, height = '400px', className = '' }) 
             >
                 <div className="text-center p-4">
                     <p className="text-sm font-medium text-red-500">
-                        Map data unavailable for "{cityName}"
+                        Map data unavailable for &quot;{cityName}&quot;
                     </p>
                     <p className="text-xs text-gray-400 mt-1">
-                        Try "Mumbai Suburban" or "Pune"
+                        Try &quot;Mumbai Suburban&quot; or &quot;Pune&quot;
                     </p>
                 </div>
             </div>

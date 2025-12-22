@@ -14,7 +14,7 @@ const ALERTS_DATA = [
         severity: 'Very Critical',
         icon: HiFire,
         color: 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400',
-        border: 'border-l-4 border-l-red-500'
+        border: 'border-l-[6px] border-l-red-500'
     },
     {
         id: 2,
@@ -24,7 +24,7 @@ const ALERTS_DATA = [
         severity: 'Critical',
         icon: HiExclamationTriangle,
         color: 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400',
-        border: 'border-l-4 border-l-red-500'
+        border: 'border-l-[6px] border-l-red-500'
     },
     {
         id: 3,
@@ -34,7 +34,7 @@ const ALERTS_DATA = [
         severity: 'Moderate',
         icon: HiUserGroup,
         color: 'bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400',
-        border: 'border-l-4 border-l-yellow-500'
+        border: 'border-l-[6px] border-l-yellow-500'
     },
     {
         id: 4,
@@ -44,7 +44,7 @@ const ALERTS_DATA = [
         severity: 'Moderate',
         icon: HiIdentification,
         color: 'bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400',
-        border: 'border-l-4 border-l-yellow-500'
+        border: 'border-l-[6px] border-l-yellow-500'
     },
     {
         id: 5,
@@ -54,7 +54,7 @@ const ALERTS_DATA = [
         severity: 'Critical',
         icon: HiWrenchScrewdriver,
         color: 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400',
-        border: 'border-l-4 border-l-blue-500'
+        border: 'border-l-[6px] border-l-blue-500'
     },
 ];
 
@@ -73,7 +73,7 @@ export default function AlertsList() {
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-colors
+                        className={`px-3 py-1 rounded-full text-base font-medium whitespace-nowrap transition-colors
                             ${activeTab === tab
                                 ? 'bg-[#1C2347] text-white dark:bg-blue-600'
                                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400'
@@ -87,21 +87,21 @@ export default function AlertsList() {
             {/* List */}
             <div className="flex-1 overflow-y-auto space-y-3 pr-2">
                 {filteredAlerts.length === 0 ? (
-                    <div className="text-center text-xs text-gray-400 py-8">No alerts found</div>
+                    <div className="text-center text-sm text-gray-400 py-8">No alerts found</div>
                 ) : (
                     filteredAlerts.map(alert => (
-                        <div key={alert.id} className={`flex gap-3 p-3 rounded-r-md rounded-l-sm bg-gray-50 dark:bg-gray-800/50 ${alert.border}`}>
+                        <div key={alert.id} className={`flex gap-3 p-2 rounded-md bg-gray-50 dark:bg-gray-800/50 ${alert.border} ${alert.color}`}>
                             <div className={`h-8 w-8 rounded flex items-center justify-center shrink-0 ${alert.color}`}>
                                 <alert.icon className="h-5 w-5" />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <h4 className="text-sm font-semibold text-[#1C2347] dark:text-white truncate">
+                                <h4 className="text-lg font-semibold text-[#1C2347] dark:text-white truncate">
                                     {alert.title}
                                 </h4>
-                                <p className="text-xs text-[#595959] dark:text-[#9F9F9F] line-clamp-1">
+                                <p className="text-base text-[#595959] dark:text-[#9F9F9F] line-clamp-1">
                                     {alert.description}
                                 </p>
-                                <p className="text-[10px] text-gray-400 mt-1">
+                                <p className="text-sm text-gray-400 mt-1">
                                     {alert.time}
                                 </p>
                             </div>

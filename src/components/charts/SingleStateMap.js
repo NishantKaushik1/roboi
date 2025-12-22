@@ -4,10 +4,9 @@ import ReactECharts from 'echarts-for-react';
 import * as echarts from 'echarts';
 import { useEffect, useState } from 'react';
 
-import { useTheme } from '@/hooks/useTheme';
 
-export default function SingleStateMap({ stateName, data = [], height = '400px', className = '' }) {
-    const { isDark } = useTheme();
+
+export default function SingleStateMap({ stateName, height = '400px', className = '' }) {
     const [isMapLoaded, setIsMapLoaded] = useState(false);
     const [mapName, setMapName] = useState(null);
 

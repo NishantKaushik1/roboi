@@ -47,7 +47,7 @@ export default function DonutChart({ data, height = '300px' }) {
                 labelLine: {
                     show: false,
                 },
-                data: data,
+                data,
             },
         ],
     };

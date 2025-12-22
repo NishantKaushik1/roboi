@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+
+
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { HiShieldCheck, HiBell, HiCheckBadge } from 'react-icons/hi2';
 
@@ -128,15 +128,31 @@ export default function LoginPage() {
                 <div className="relative w-full max-w-lg aspect-square mb-12">
                     <div className="absolute top-0 right-0 w-3/4 h-3/4 rounded-2xl overflow-hidden border-4 border-white/10 shadow-2xl z-10">
                         {/* Placeholder for CCTV Camera Image */}
-                        <div className="w-full h-full bg-gradient-to-br from-blue-900 to-gray-900 flex items-center justify-center text-white/20">
-                            CCTV Camera Image
-                        </div>
+                        <video
+                            className="w-full h-full object-cover"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            poster="/assets/cctv-poster.jpg" // Optional poster
+                        >
+                            <source src="/assets/cctv-video.mp4" type="video/mp4" />
+                            {/* User to replace src above */}
+                        </video>
                     </div>
                     <div className="absolute bottom-0 left-0 w-2/3 h-2/3 rounded-2xl overflow-hidden border-4 border-white/10 shadow-2xl">
                         {/* Placeholder for Robot Image */}
-                        <div className="w-full h-full bg-gradient-to-tr from-blue-800 to-indigo-900 flex items-center justify-center text-white/20">
-                            Robot Arm Image
-                        </div>
+                        <video
+                            className="w-full h-full object-cover"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            poster="/assets/robot-poster.jpg" // Optional poster
+                        >
+                            <source src="/assets/robot-arm-video.mp4" type="video/mp4" />
+                            {/* User to replace src above */}
+                        </video>
                     </div>
                 </div>
 

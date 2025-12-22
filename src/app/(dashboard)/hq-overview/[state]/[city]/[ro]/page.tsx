@@ -6,7 +6,7 @@ import LineChart from '@/components/charts/LineChart';
 import CCTVGrid from '@/components/widgets/cctv/CCTVGrid';
 import AlertsList from '@/components/widgets/alerts/AlertsList';
 import CategoryProgress from '@/components/widgets/progress/CategoryProgress';
-import { HiArrowLeft } from 'react-icons/hi2';
+
 import Link from 'next/link';
 
 // Mock Data for charts
@@ -44,7 +44,7 @@ export default function RoDashboard() {
                         </div>
                     </div>
                     <Link href={`/hq-overview/${stateName.toLowerCase()}/${cityName.toLowerCase()}/${roId}/anpr-vehicles`}>
-                        <button className="bg-[#095396] text-white px-4 py-1.5 rounded text-xs font-medium hover:bg-blue-800 transition-colors">
+                        <button className="bg-[#095396] text-white px-4 py-1.5 rounded text-sm font-medium hover:bg-blue-800 transition-colors">
                             ANPR Vehicles
                         </button>
                     </Link>
@@ -61,7 +61,7 @@ export default function RoDashboard() {
                         // { label: 'Active Alerts', value: '2' }
                     ].concat([{ label: 'Active Alerts', value: '2' }]).map((stat, i) => (
                         <div key={i} className="rounded border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-                            <div className="text-[10px] font-medium text-[#595959] dark:text-[#9F9F9F]">{stat.label}</div>
+                            <div className="text-base font-medium text-[#595959] dark:text-[#9F9F9F]">{stat.label}</div>
                             <div className="mt-1 text-lg font-bold text-[#1C2347] dark:text-white">{stat.value}</div>
                         </div>
                     ))}
@@ -86,7 +86,7 @@ export default function RoDashboard() {
             </div>
 
             {/* Middle Row Charts */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[300px] max-lg:h-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-auto max-lg:h-auto">
                 <Card title="Incidents by Category (last 30 days)" className="flex flex-col">
                     <div className="flex-1 min-h-0 p-2">
                         <CategoryProgress />
@@ -98,7 +98,7 @@ export default function RoDashboard() {
                             data={trendsData}
                             xAxisData={trendsTime}
                             title="Incidents"
-                            height="100%"
+                            height="300%"
                             color="#595959" // gray for the line
                         />
                     </div>
@@ -106,7 +106,7 @@ export default function RoDashboard() {
             </div>
 
             {/* Bottom Row Chart */}
-            <Card title="Hourly Footfall (People vs Vehicles)" className="h-[300px] flex flex-col">
+            <Card title="Hourly Footfall (People vs Vehicles)" className="h-auto flex flex-col">
                 <div className="flex-1 min-h-0">
                     <LineChart
                         xAxisData={hours}
@@ -114,7 +114,7 @@ export default function RoDashboard() {
                             { name: 'People', data: people, color: '#3B82F6', areaColor: 'rgba(59, 130, 246, 0.2)' },
                             { name: 'Vehicles', data: vehicles, color: '#EF4444', areaColor: 'rgba(239, 68, 68, 0.2)' }
                         ]}
-                        height="100%"
+                        height="200%"
                     />
                 </div>
             </Card>

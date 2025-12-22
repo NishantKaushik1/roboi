@@ -9,7 +9,7 @@ interface StatsCardProps {
   label: string;
   value: string | number;
   trend?: number;
-  trendLabel?: string;
+  // trendLabel?: string;
   icon?: React.ElementType;
   isActive?: boolean;
   className?: string;
@@ -19,7 +19,7 @@ export default function StatsCard({
   label,
   value,
   trend,
-  trendLabel,
+  // trendLabel,
   icon: Icon,
   isActive = false,
   className,

@@ -205,7 +205,7 @@ export const VALIDATION = {
   NUMBER_PLATE_REGEX: /^[A-Z]{2}[0-9]{1,2}[A-Z]{1,2}[0-9]{4}$/,
 };
 
-export default {
+const constants = {
   PUMP_STATUS,
   PUMP_STATUS_LABELS,
   PUMP_STATUS_COLORS,
@@ -231,3 +231,5 @@ export default {
   STORAGE_KEYS,
   VALIDATION,
 };
+
+export default constants;

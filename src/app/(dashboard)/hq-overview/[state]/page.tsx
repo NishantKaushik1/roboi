@@ -101,10 +101,10 @@ export default function StatePage() {
                             { label: 'SLA: Mean Time to Close', value: '18m', trend: '-0.42%', color: 'text-red-500' },
                         ].map((stat, i) => (
                             <div key={i} className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900 flex flex-col justify-center">
-                                <div className="text-xs text-[#595959] dark:text-[#9F9F9F]">{stat.label}</div>
+                                <div className="text-base text-[#595959] font-medium dark:text-[#9F9F9F]">{stat.label}</div>
                                 <div className="flex items-end gap-2 mt-1">
                                     <span className="text-xl font-bold text-[#1C2347] dark:text-white">{stat.value}</span>
-                                    <span className={`text-[10px] font-medium ${stat.color} mb-1`}>{stat.trend}</span>
+                                    <span className={`text-sm font-medium ${stat.color} mb-1`}>{stat.trend}</span>
                                 </div>
                             </div>
                         ))}
