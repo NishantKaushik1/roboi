@@ -110,8 +110,8 @@ export default function HQOverviewPage() {
             <MapChart
               data={mapData}
               height="100%"
-              center={[78.9629, 22.5937]}
-              zoom={1.3}
+              center={[78.9629, 23.5937]}
+              zoom={1.1}
             />
           </div>
         </Card>
