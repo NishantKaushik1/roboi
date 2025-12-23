@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { HiFire, HiExclamationTriangle, HiWrenchScrewdriver, HiUserGroup, HiIdentification } from 'react-icons/hi2';
+import { HiFire, HiExclamationTriangle, HiWrenchScrewdriver, HiUserGroup, HiIdentification, HiEye, HiCheckCircle, HiXCircle } from 'react-icons/hi2';
 
 const TABS = ['All', 'Very Critical', 'Critical', 'Moderate'];
 
@@ -66,7 +66,7 @@ export default function AlertsList() {
         : ALERTS_DATA.filter(a => a.severity === activeTab);
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-[400px] overflow-y-auto">
             {/* Tabs */}
             <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
                 {TABS.map(tab => (
@@ -98,17 +98,39 @@ export default function AlertsList() {
                                 <h4 className="text-lg font-semibold text-[#1C2347] dark:text-white truncate">
                                     {alert.title}
                                 </h4>
-                                <p className="text-base text-[#595959] dark:text-[#9F9F9F] line-clamp-1">
+                                <p className="text-base font-medium text-[#595959] dark:text-[#9F9F9F] line-clamp-1">
                                     {alert.description}
                                 </p>
-                                <p className="text-sm text-gray-400 mt-1">
+                                <p className="text-sm text-[#1C2347] dark:text-[#9F9F9F] mt-1">
                                     {alert.time}
                                 </p>
                             </div>
+
+                            <div className="flex items-center justify-between gap-2 pl-2">
+                                <button className="flex items-center rounded-md gap-1  text-xs font-medium text-[#9F9F9F] hover:text-blue-600   rounded dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 transition-colors">
+                                    <HiEye className="w-5 h-5" />
+                                    {/* View */}
+                                </button>
+                                <div className="flex gap-1">
+                                    <button
+                                        className="p-1 text-[#9F9F9F] hover:text-green-600 rounded dark:text-green-400 dark:hover:bg-green-900/30 transition-colors"
+                                        title="Mark Resolved"
+                                    >
+                                        <HiCheckCircle className="w-5 h-5" />
+                                    </button>
+                                    <button
+                                        className="p-1 text-[#9F9F9F] hover:text-red-500 rounded dark:text-red-400 dark:hover:bg-red-900/30 transition-colors"
+                                        title="Dismiss"
+                                    >
+                                        <HiXCircle className="w-5 h-5" />
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     ))
-                )}
-            </div>
-        </div>
+                )
+                }
+            </div >
+        </div >
     );
 }

@@ -37,7 +37,7 @@ export default function Card({
           {subtitle && <p className="mt-1 text-sm text-[#595959] dark:text-[#8C8C8C]">{subtitle}</p>}
         </div>
       )}
-      <div className="flex-1 min-h-0 p-6">{children}</div>
+      <div className="flex-1 min-h-0 p-4">{children}</div>
       {footer && (
         <div className="border-t border-gray-200 px-6 py-4 dark:border-gray-800">{footer}</div>
       )}
