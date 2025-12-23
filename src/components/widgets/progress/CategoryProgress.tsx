@@ -7,6 +7,9 @@ const CATEGORIES = [
     { label: 'Queue', value: 70, color: 'bg-green-600' },
     { label: 'Tank', value: 55, color: 'bg-green-600' },
     { label: 'Theft', value: 55, color: 'bg-green-600' },
+    { label: 'People', value: 55, color: 'bg-green-600' },
+    { label: 'Baloons', value: 55, color: 'bg-green-600' },
+    { label: 'Residue', value: 55, color: 'bg-green-600' },
 ];
 
 export default function CategoryProgress() {
