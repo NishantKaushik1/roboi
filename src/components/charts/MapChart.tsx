@@ -21,8 +21,8 @@ export default function MapChart({ data, height = '500px', center, zoom, classNa
 
     useEffect(() => {
         // Fetch India GeoJSON client-side
-        // Using a reliable source for India map with states
-        fetch('https://raw.githubusercontent.com/Subhash9325/GeoJson-Data-of-Indian-States/master/Indian_States')
+        // Using a reliable source for India map with states (hosted locally)
+        fetch('/assets/jsondata/indianstates.geojson')
             .then((response) => response.json())
             .then((geoJson) => {
                 echarts.registerMap('INDIA', geoJson);

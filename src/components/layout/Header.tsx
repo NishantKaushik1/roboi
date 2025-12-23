@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { HiUser, HiArrowRightOnRectangle, HiMoon, HiSun } from 'react-icons/hi2';
+import Image from 'next/image';
 
 export default function Header({
     // logoUrl = '/nayara-logo.png',
@@ -45,10 +46,10 @@ export default function Header({
             {/* Left: Logo & Title */}
             <div className="flex items-center gap-4">
                 {/* Logo Placeholder */}
-                <div className="flex h-10 w-10 items-center justify-center rounded bg-blue-50">
-                    {/* Replace with <Image /> when asset is available */}
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-400 to-green-400" />
-                </div>
+                {/* <div className="flex h-10 w-10 items-center justify-center rounded bg-blue-50"> */}
+                {/* Replace with <Image /> when asset is available */}
+                <Image src="/assets/login/nayaralogo.png" alt="Logo" width={100} height={100} />
+                {/* </div> */}
 
                 <div className="flex flex-col">
                     <h1 className="text-sm font-bold text-blue-900 dark:text-white">{title}</h1>
