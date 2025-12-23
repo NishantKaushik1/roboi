@@ -48,7 +48,7 @@ export const formatPercentage = (value, decimals = 1) => {
  */
 export const formatCompactNumber = (num) => {
   if (num === null || num === undefined) return '0';
-  
+
   if (num >= 1000000000) {
     return `${(num / 1000000000).toFixed(1)}B`;
   }
@@ -82,9 +82,7 @@ export const formatDate = (date, formatString = 'dd MMM yyyy') => {
  * @param {Date|string|number} date - Date to format
  * @returns {string} Formatted date with time
  */
-export const formatDateTime = (date) => {
-  return formatDate(date, 'dd MMM yyyy, HH:mm');
-};
+export const formatDateTime = (date) => formatDate(date, 'dd MMM yyyy, HH:mm');
 
 /**
  * Format date as relative time (e.g., "2 hours ago")
@@ -123,7 +121,7 @@ export const formatRelativeDate = (date) => {
  */
 export const formatDuration = (ms) => {
   if (!ms || ms < 0) return '0s';
-  
+
   const seconds = Math.floor(ms / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
@@ -142,11 +140,11 @@ export const formatDuration = (ms) => {
  */
 export const formatFileSize = (bytes) => {
   if (!bytes || bytes === 0) return '0 Bytes';
-  
+
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  
+
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
 };
 
@@ -168,7 +166,7 @@ export const formatNumberPlate = (plate) => {
 export const formatPhoneNumber = (phone) => {
   if (!phone) return '';
   const cleaned = phone.replace(/\D/g, '');
-  
+
   if (cleaned.length === 10) {
     return `+91 ${cleaned.slice(0, 5)} ${cleaned.slice(5)}`;
   }
@@ -224,7 +222,7 @@ export const formatCoordinates = (lat, lng) => {
   return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
 };
 
-export default {
+const formatters = {
   formatNumber,
   formatCurrency,
   formatPercentage,
@@ -242,3 +240,5 @@ export default {
   toTitleCase,
   formatCoordinates,
 };
+
+export default formatters;

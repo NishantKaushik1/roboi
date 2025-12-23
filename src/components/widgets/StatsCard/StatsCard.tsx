@@ -9,7 +9,7 @@ interface StatsCardProps {
   label: string;
   value: string | number;
   trend?: number;
-  trendLabel?: string;
+  // trendLabel?: string;
   icon?: React.ElementType;
   isActive?: boolean;
   className?: string;
@@ -19,7 +19,7 @@ export default function StatsCard({
   label,
   value,
   trend,
-  trendLabel,
+  // trendLabel,
   icon: Icon,
   isActive = false,
   className,
@@ -27,7 +27,7 @@ export default function StatsCard({
   return (
     <div
       className={clsx(
-        "relative flex flex-col justify-between rounded-none border bg-white p-4 shadow-sm transition-all dark:bg-gray-900",
+        "relative flex flex-col justify-between rounded-none border rounded-[5px] bg-white p-4 shadow-sm transition-all dark:bg-gray-900",
         isActive
           ? "border-blue-500 shadow-md ring-1 ring-blue-500 z-10"
           : "border-gray-200 dark:border-gray-800",
@@ -35,13 +35,13 @@ export default function StatsCard({
       )}
     >
       {/* Design shows Label at top */}
-      <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+      <p className="text-sm font-medium text-[#595959] dark:text-[#9F9F9F]">
         {label}
       </p>
 
       {/* Value in middle/bottom */}
       <div className="mt-2 flex items-baseline gap-2">
-        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+        <h3 className="text-2xl font-bold text-[#1C2347] dark:text-white">
           {value}
         </h3>
 
@@ -54,7 +54,7 @@ export default function StatsCard({
                 ? "text-green-600 dark:text-green-400"
                 : trend < 0
                   ? "text-red-600 dark:text-red-400"
-                  : "text-gray-500"
+                  : "text-[#595959]"
             )}
           >
             {trend > 0 ? "↗" : trend < 0 ? "↘" : ""} {Math.abs(trend)}%
@@ -64,7 +64,7 @@ export default function StatsCard({
 
       {/* Optional extra content or icon if needed (Design doesn't show icons in top cards mostly, but keeping support) */}
       {Icon && (
-        <div className="absolute right-4 top-4 text-gray-400 opacity-20">
+        <div className="absolute right-4 top-4 text-[#8C8C8C] opacity-20">
           <Icon className="h-8 w-8" />
         </div>
       )}
