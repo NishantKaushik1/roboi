@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  
+
   // Image optimization
   images: {
     domains: ['api.mapbox.com', 'localhost'],
@@ -72,6 +72,17 @@ const nextConfig = {
         source: '/',
         destination: '/hq-overview',
         permanent: false,
+      },
+    ];
+  },
+
+  // Rewrites for API proxy
+  async rewrites() {
+
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${process.env.BACKEND_URL || 'http://localhost:8000'}/api/:path*`,
       },
     ];
   },

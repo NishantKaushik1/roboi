@@ -75,7 +75,8 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public folder files
+     * - /api/v1/ws (WebSocket endpoint to avoid upgrade handling issues)
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|api/v1/ws|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };

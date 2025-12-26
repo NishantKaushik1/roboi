@@ -3,73 +3,37 @@
 import { useState } from 'react';
 import { HiFire, HiExclamationTriangle, HiWrenchScrewdriver, HiUserGroup, HiIdentification, HiEye, HiCheckCircle, HiXCircle } from 'react-icons/hi2';
 
-const TABS = ['All', 'Very Critical', 'Critical', 'Moderate'];
 
-const ALERTS_DATA = [
-    {
-        id: 1,
-        title: 'Safety & Compliance',
-        description: 'Fire extinguisher availability, pressure & expiry compliance',
-        time: 'Today 11:14 AM • Pump-2',
-        severity: 'Very Critical',
-        icon: HiFire,
-        color: 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400',
-        border: 'border-l-[6px] border-l-red-500'
-    },
-    {
-        id: 2,
-        title: 'Fuel Quality & Quantity',
-        description: 'Tank dip variance beyond allowable limit',
-        time: 'Today 11:14 AM • Pump-2',
-        severity: 'Critical',
-        icon: HiExclamationTriangle,
-        color: 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400',
-        border: 'border-l-[6px] border-l-red-500'
-    },
-    {
-        id: 3,
-        title: 'Forecourt & Operations',
-        description: 'Staff uniform/grooming non-compliance',
-        time: 'Today 11:14 AM • Pump-2',
-        severity: 'Moderate',
-        icon: HiUserGroup,
-        color: 'bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400',
-        border: 'border-l-[6px] border-l-yellow-500'
-    },
-    {
-        id: 4,
-        title: 'Customer Service',
-        description: 'Billing issues / wrong bill',
-        time: 'Today 11:14 AM • Pump-2',
-        severity: 'Moderate',
-        icon: HiIdentification,
-        color: 'bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400',
-        border: 'border-l-[6px] border-l-yellow-500'
-    },
-    {
-        id: 5,
-        title: 'Housekeeping & Maintenance',
-        description: 'Forecourt cleanliness below standard',
-        time: 'Today 11:14 AM • Pump-2',
-        severity: 'Critical',
-        icon: HiWrenchScrewdriver,
-        color: 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400',
-        border: 'border-l-[6px] border-l-blue-500'
-    },
-];
+export interface AlertItem {
+    id: string;
+    title: string;
+    description: string;
+    time: string;
+    severity: string;
+    icon?: any; // Icon component
+    color?: string;
+    border?: string;
+}
 
-export default function AlertsList() {
+const SEVERITY_TABS = ['All', 'CRITICAL', 'WARNING', 'INFO'];
+
+interface AlertsListProps {
+    alerts?: AlertItem[];
+}
+
+
+export default function AlertsList({ alerts = [] }: AlertsListProps) {
     const [activeTab, setActiveTab] = useState('All');
 
     const filteredAlerts = activeTab === 'All'
-        ? ALERTS_DATA
-        : ALERTS_DATA.filter(a => a.severity === activeTab);
+        ? alerts
+        : alerts.filter(a => a.severity === activeTab);
 
     return (
         <div className="flex flex-col h-[400px] overflow-y-auto">
             {/* Tabs */}
             <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
-                {TABS.map(tab => (
+                {SEVERITY_TABS.map(tab => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
@@ -92,7 +56,7 @@ export default function AlertsList() {
                     filteredAlerts.map(alert => (
                         <div key={alert.id} className={`flex gap-3 p-2 rounded-md bg-gray-50 dark:bg-gray-800/50 ${alert.border} ${alert.color}`}>
                             <div className={`h-8 w-8 rounded flex items-center justify-center shrink-0 ${alert.color}`}>
-                                <alert.icon className="h-5 w-5" />
+                                {alert.icon && <alert.icon className="h-5 w-5" />}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <h4 className="text-lg font-semibold text-[#1C2347] dark:text-white truncate">

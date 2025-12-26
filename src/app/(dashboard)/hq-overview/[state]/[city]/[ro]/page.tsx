@@ -3,54 +3,203 @@
 import { HiArrowPath } from 'react-icons/hi2';
 import { useParams } from 'next/navigation';
 import Card from '@/components/ui/Card/Card';
-import LineChart from '@/components/charts/LineChart';
-import CCTVGrid from '@/components/widgets/cctv/CCTVGrid';
-import AlertsList from '@/components/widgets/alerts/AlertsList';
+import AlertsList, { AlertItem } from '@/components/widgets/alerts/AlertsList';
 import CategoryProgress from '@/components/widgets/progress/CategoryProgress';
-import RecentDetectionLog from '@/components/widgets/tables/RecentDetectionLog';
-import PeakOccupancyHeatmap from '@/components/widgets/charts/PeakOccupancyHeatmap';
-
+import RecentDetectionLog, { Detection } from '@/components/widgets/tables/RecentDetectionLog';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
-// Mock Data for charts
-const generateFootfallData = () => {
-    const hours = ['0:00', '2:00', '4:00', '6:00', '8:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00'];
-    const people = [45, 30, 20, 40, 65, 85, 120, 110, 95, 130, 150, 90, 60];
-    const vehicles = [20, 15, 10, 30, 50, 70, 100, 90, 80, 110, 130, 70, 40];
-    return { hours, people, vehicles };
+import {
+    useSiteSummary,
+    useSiteEvents,
+    useSiteAnalyticsDistribution,
+    // useSiteTrafficFlow
+} from '@/hooks/useSiteData';
+import { useRealtimeAlerts } from '@/hooks/useRealtimeAlerts';
+import { StreamGuardEvent } from '@/types/api';
+import { HiFire, HiExclamationTriangle, HiWrenchScrewdriver, HiUserGroup, HiIdentification, HiEye, HiCheckCircle, HiXCircle } from 'react-icons/hi2';
+import { useMemo, useState, useEffect } from 'react';
+import { format } from 'date-fns';
+import { useSWRConfig } from 'swr';
+
+const LineChart = dynamic(() => import('@/components/charts/LineChart'), {
+    loading: () => <div className="h-full w-full animate-pulse bg-gray-100 dark:bg-gray-800 rounded-lg"></div>,
+    ssr: false
+});
+
+const PeakOccupancyHeatmap = dynamic(() => import('@/components/widgets/charts/PeakOccupancyHeatmap'), {
+    loading: () => <div className="h-full w-full animate-pulse bg-gray-100 dark:bg-gray-800 rounded-lg"></div>,
+    ssr: false
+});
+
+const CCTVGrid = dynamic(() => import('@/components/widgets/cctv/CCTVGrid'), {
+    loading: () => <div className="h-full w-full animate-pulse bg-gray-900 rounded-lg"></div>,
+    ssr: false
+});
+
+// Helper to map API Event to AlertItem
+const mapEventToAlert = (event: StreamGuardEvent): AlertItem => {
+    let icon = HiExclamationTriangle;
+    let color = 'bg-gray-50 text-gray-600 dark:bg-gray-900/20 dark:text-gray-400';
+    let border = 'border-l-[6px] border-l-gray-500';
+
+    if (event.type === 'SAFETY') icon = HiFire;
+    if (event.type === 'OPERATIONS') icon = HiWrenchScrewdriver;
+    if (event.type === 'SECURITY') icon = HiUserGroup;
+
+    if (event.severity === 'CRITICAL') {
+        color = 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400';
+        border = 'border-l-[6px] border-l-red-500';
+    } else if (event.severity === 'WARNING') {
+        color = 'bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400';
+        border = 'border-l-[6px] border-l-yellow-500';
+    } else {
+        color = 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400';
+        border = 'border-l-[6px] border-l-blue-500';
+    }
+
+    return {
+        id: event.id,
+        title: event.subType || event.type,
+        description: event.metadata.detectedObjects.join(', '),
+        time: format(new Date(event.timestamp), 'PP p'),
+        severity: event.severity,
+        icon,
+        color,
+        border
+    };
 };
 
-// Mock Data for Object Count Chart
-const objectCountTime = Array.from({ length: 13 }, (_, i) => `${9 + i > 12 ? 9 + i - 12 : 9 + i}:00 ${9 + i >= 12 ? 'PM' : 'AM'}`);
-
-const objectCountData = [
-    { name: 'CAFETERIA', data: [3, 4, 3, 5, 7, 5, 4, 3, 4, 2, 2, 2, 1], color: '#3B82F6', areaColor: 'rgba(59, 130, 246, 0.1)' },
-    { name: 'EMPLOYEE AREA', data: [6, 5, 4, 4, 4, 3, 4, 4, 8, 5, 6, 8, 10], color: '#10B981', areaColor: 'rgba(16, 185, 129, 0.1)' },
-    { name: 'RECEPTION', data: [3, 3, 4, 4, 3, 5, 3, 2, 2, 3, 4, 4, 1], color: '#F59E0B', areaColor: 'rgba(245, 158, 11, 0.1)' },
-    { name: 'BOSS CABIN', data: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2], color: '#EF4444', areaColor: 'rgba(239, 68, 68, 0.1)' },
-];
-
-
-
-// Mock Data for Detections
-const recentDetections: any[] = [
-    { id: '1', timestamp: '12/16/2025, 7:46:16 PM', camera: 'BOSS_CABIN', type: 'EVENT', status: 'CRITICAL', people: 1, keyDetections: ['person', 'chair', 'book'], confidence: 85 },
-    { id: '2', timestamp: '12/16/2025, 7:46:13 PM', camera: 'EMPLOYEE_AREA', type: 'METRIC', status: 'SAFE', people: 10, keyDetections: ['person', 'person', 'person', '+24'], confidence: 92 },
-    { id: '3', timestamp: '12/16/2025, 7:46:11 PM', camera: 'BOSS_CABIN', type: 'EVENT', status: 'CRITICAL', people: 1, keyDetections: ['person', 'chair', 'book'], confidence: 88 },
-    { id: '4', timestamp: '12/16/2025, 7:46:06 PM', camera: 'BOSS_CABIN', type: 'EVENT', status: 'CRITICAL', people: 1, keyDetections: ['person', 'chair', 'chair', '+1'], confidence: 90 },
-    { id: '5', timestamp: '12/16/2025, 7:46:01 PM', camera: 'BOSS_CABIN', type: 'EVENT', status: 'CRITICAL', people: 1, keyDetections: ['person', 'chair', 'chair', '+2'], confidence: 87 },
-    { id: '6', timestamp: '12/16/2025, 7:45:55 PM', camera: 'BOSS_CABIN', type: 'EVENT', status: 'CRITICAL', people: 2, keyDetections: ['person', 'person', 'chair', '+2'], confidence: 85 },
-    { id: '7', timestamp: '12/16/2025, 7:45:55 PM', camera: 'BOSS_CABIN', type: 'METRIC', status: 'SAFE', people: 2, keyDetections: ['person', 'person', 'chair', '+1'], confidence: 95 },
-    { id: '8', timestamp: '12/16/2025, 7:45:50 PM', camera: 'BOSS_CABIN', type: 'EVENT', status: 'CRITICAL', people: 2, keyDetections: ['person', 'person', 'chair', '+3'], confidence: 82 },
-];
+const mapEventToDetection = (event: StreamGuardEvent): Detection => {
+    return {
+        id: event.id,
+        timestamp: format(new Date(event.timestamp), 'Pp'),
+        camera: event.sourceName,
+        type: 'EVENT', // Simplification, API has type SECURITY/SAFETY etc.
+        status: event.severity === 'CRITICAL' ? 'CRITICAL' : 'SAFE',
+        people: 0, // Not provided directly
+        keyDetections: event.metadata.detectedObjects,
+        confidence: event.metadata.confidence
+    };
+};
 
 export default function RoDashboard() {
     const params = useParams();
-    const stateName = decodeURIComponent((Array.isArray(params.state) ? params.state[0] : params.state) || 'Maharashtra');
-    const cityName = decodeURIComponent((Array.isArray(params.city) ? params.city[0] : params.city) || 'Mumbai');
-    const roId = decodeURIComponent((Array.isArray(params.ro) ? params.ro[0] : params.ro) || 'NE-MU-RO-1001');
+    // const roId = decodeURIComponent((Array.isArray(params.ro) ? params.ro[0] : params.ro) || 'NE-MU-RO-1001');
+    const roId = 'HEAD_OFFICE'; // Testing purpose
+    const { mutate } = useSWRConfig();
+    const [lastRefreshed, setLastRefreshed] = useState<string | null>(null);
 
-    const { hours, people, vehicles } = generateFootfallData();
+    useEffect(() => {
+        setLastRefreshed(format(new Date(), 'HH:mm'));
+    }, []);
+
+    const { summary, isLoading: loadingSummary } = useSiteSummary(roId);
+    const { events: eventList, isLoading: loadingEvents } = useSiteEvents(roId);
+    const { distribution, isLoading: loadingDist } = useSiteAnalyticsDistribution(roId);
+    // const { trafficData, isLoading: loadingTraffic } = useSiteTrafficFlow(roId); // Unused
+
+    // Real-time alerts integration
+    useRealtimeAlerts(roId, (newEvent) => {
+        // Mutate the SWR cache for events
+        mutate(`/api/v1/sites/${roId}/events?limit=50`, (data: { events: StreamGuardEvent[] } | undefined) => {
+            if (!data) return { events: [newEvent] };
+            return { events: [newEvent, ...data.events] };
+        }, false);
+
+        // Also refresh summary if needed, but might be expensive
+        mutate(`/api/v1/sites/${roId}/summary`);
+    });
+
+    // Process Data
+    const alerts = useMemo(() => {
+        return (eventList || []).map(mapEventToAlert);
+    }, [eventList]);
+
+    const detections = useMemo(() => {
+        return (eventList || []).map(mapEventToDetection);
+    }, [eventList]);
+
+    // Calculate derived stats
+    const criticalAlertsCount = (eventList || []).filter(e => e.severity === 'CRITICAL').length;
+    const sopViolationsCount = (eventList || []).filter(e => e.severity === 'CRITICAL' || e.severity === 'WARNING').length;
+
+    const stats = [
+        { label: 'Active Cameras', value: summary?.metrics?.activeSensors ?? '-' },
+        { label: 'Active Events', value: summary?.metrics?.openAlerts ?? '-' },
+        { label: 'Critical Alerts', value: criticalAlertsCount },
+        { label: 'Total People', value: summary?.metrics?.trafficCount ?? '-' },
+        { label: 'Peak Occupancy', value: summary?.metrics?.peakDensity ?? '-' },
+        { label: 'SOP Violations (24h)', value: sopViolationsCount },
+    ];
+
+    const categoryData = useMemo(() => {
+        if (!Array.isArray(distribution)) return [];
+        return distribution.map(item => ({
+            label: item.label,
+            value: item.value,
+            percentage: item.percentage,
+            color: 'bg-blue-500' // Assign colors dynamically if desired
+        }));
+    }, [distribution]);
+
+    // Object Count Chart Data (derived from Events)
+    const objectCountData = useMemo(() => {
+        if (!eventList || eventList.length === 0) return { hours: [], datasets: [] };
+
+        // 1. Group events by time (HH:mm) and aggregate object counts
+        const timeMap = new Map<string, Record<string, number>>();
+        const allObjects = new Set<string>();
+
+        // Sort events by timestamp ascending first
+        const sortedEvents = [...eventList].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+        sortedEvents.forEach(event => {
+            const timeKey = format(new Date(event.timestamp), 'HH:mm');
+
+            if (!timeMap.has(timeKey)) {
+                timeMap.set(timeKey, {});
+            }
+
+            const counts = timeMap.get(timeKey)!;
+
+            // Check detectedObjects in metadata
+            if (event.metadata && event.metadata.detectedObjects) {
+                event.metadata.detectedObjects.forEach(obj => {
+                    const normalizedObj = obj.toLowerCase(); // normalize case if needed
+                    allObjects.add(normalizedObj);
+                    counts[normalizedObj] = (counts[normalizedObj] || 0) + 1;
+                });
+            }
+        });
+
+        // 2. Prepare X-axis (hours/minutes)
+        const hours = Array.from(timeMap.keys());
+
+        // 3. Prepare Datasets
+        const palette = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#6366F1'];
+
+        const datasets = Array.from(allObjects).map((obj, index) => {
+            const data = hours.map(time => {
+                const counts = timeMap.get(time);
+                return counts ? (counts[obj] || 0) : 0;
+            });
+
+            const color = palette[index % palette.length];
+
+            return {
+                name: obj.charAt(0).toUpperCase() + obj.slice(1), // Capitalize
+                data,
+                color,
+                areaColor: color + '66' // Add transparency for area (hex + 66 = ~40% opacity)
+            };
+        });
+
+        return {
+            hours,
+            datasets
+        };
+    }, [eventList]);
 
     return (
         <div className="flex h-full flex-col gap-6 p-6">
@@ -58,104 +207,69 @@ export default function RoDashboard() {
             <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                     <div className="flex flex-col gap-1">
-                        <Link href={`/hq-overview/${stateName.toLowerCase()}/${cityName.toLowerCase()}`} className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700">
-                            <span className="text-blue-600">{'<<Back'}</span> {cityName} / ANPR — Captured Vehicles
-                        </Link>
                         <div className="flex items-baseline gap-2">
                             <h1 className="text-xl font-bold text-[#1C2347] dark:text-white uppercase">{roId}</h1>
                             <div className="flex items-center gap-1">
-                                <span className="text-sm font-medium text-[#595959] dark:text-[#9F9F9F]">Pump-27 — Viman Nagar | Today • Last Refreshed 09:41 (IST)</span>
-                                <button className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors" title="Refresh Data">
+                                <span className="text-sm font-medium text-[#595959] dark:text-[#9F9F9F]">
+                                    {summary?.status === 'ONLINE' ? '🟢 Online' : '🔴 Offline'} • Last Refreshed {lastRefreshed}
+                                </span>
+                                <button onClick={() => window.location.reload()} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors" title="Refresh Data">
                                     <HiArrowPath className="h-4 w-4 text-[#0E5FD9]" />
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <Link href={`/hq-overview/${stateName.toLowerCase()}/${cityName.toLowerCase()}/${roId}/anpr-vehicles`}>
-                        <button className="bg-[#095396] text-white px-4 py-1.5 rounded text-sm font-medium hover:bg-blue-800 transition-colors">
-                            ANPR Vehicles
-                        </button>
-                    </Link>
                 </div>
 
                 {/* Top Stats Cards */}
                 <div className="grid grid-cols-6 gap-4 max-xl:grid-cols-3 max-md:grid-cols-2">
-                    {[
-                        { label: 'Active Cameras', value: '16' },
-                        { label: 'Active Events', value: '7' },
-                        { label: 'Critical Alerts', value: '3' },
-                        { label: 'Total People', value: '150' },
-                        { label: 'Peak Occupancy', value: '15' },
-                        { label: 'SOP Violations (24h)', value: '4' },
-                        // { label: 'Active Alerts', value: '2' }
-                    ]
-                        // .concat([{ label: 'Active Alerts', value: '2' }])
-                        .map((stat, i) => (
-                            <div key={i} className="rounded border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-                                <div className="text-base font-medium text-[#595959] dark:text-[#9F9F9F]">{stat.label}</div>
-                                <div className={`mt-1 text-lg font-bold ${stat.label === 'Critical Alerts' ? 'text-red-500' : 'text-[#1C2347] dark:text-white'}`}>{stat.value}</div>
-                            </div>
-                        ))}
+                    {stats.map((stat, i) => (
+                        <div key={i} className="rounded border border-gray-200 bg-white p-3 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+                            <div className="text-base font-medium text-[#595959] dark:text-[#9F9F9F]">{stat.label}</div>
+                            <div className={`mt-1 text-lg font-bold ${stat.label === 'Active Events' || stat.label === 'Critical Alerts' ? 'text-red-500' : 'text-[#1C2347] dark:text-white'}`}>{stat.value}</div>
+                        </div>
+                    ))}
                 </div>
             </div>
 
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 h-[600px] max-xl:h-auto">
-                {/* Left: Live CCTV (Span 7) */}
-                {/* <Card title="Live CCTV" className="xl:col-span-7 h-full flex flex-col">
-                    <div className="flex-1 min-h-0 bg-black rounded overflow-hidden">
-                        <CCTVGrid />
-                    </div>
-                </Card> */}
-                <Card title="Objects Detected (last 24 hrs)" className="xl:col-span-6 h-full flex flex-col">
+                <Card title="Objects Detected (Distribution)" className="xl:col-span-6 h-full flex flex-col">
                     <div className="flex-1 min-h-0 p-2 h-[400px] overflow-y-auto">
-                        <CategoryProgress />
+                        <CategoryProgress data={categoryData} />
                     </div>
-
                 </Card>
 
                 {/* Right: Recent Alerts (Span 5) */}
                 <Card title="Recent Alerts" className="xl:col-span-6 h-full flex flex-col">
                     <div className="flex-1 min-h-0">
-                        <AlertsList />
+                        <AlertsList alerts={alerts} />
                     </div>
                 </Card>
             </div>
 
             {/* Middle Row Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-auto max-lg:h-auto">
-                <Card title="Object Count Over Time" className="flex flex-col">
+                {/* Object Count Chart */}
+                <Card title="Object Count Over Time" className="h-auto flex flex-col">
                     <div className="flex-1 min-h-0">
                         <LineChart
-                            datasets={objectCountData}
-                            xAxisData={objectCountTime}
-                            height="300%"
-                        />
-                    </div>
-                </Card>
-                <Card title="Peak Occupancy" className="flex flex-col">
-                    <PeakOccupancyHeatmap />
-                </Card>
-
-            </div>
-
-            {/* Bottom Row Chart */}
-            <div className="grid grid-cols-1 gap-6">
-                <Card title="Hourly Footfall (People vs Vehicles)" className="h-auto flex flex-col">
-                    <div className="flex-1 min-h-0">
-                        <LineChart
-                            xAxisData={hours}
-                            datasets={[
-                                { name: 'People', data: people, color: '#3B82F6', areaColor: 'rgba(59, 130, 246, 0.2)' },
-                                { name: 'Vehicles', data: vehicles, color: '#EF4444', areaColor: 'rgba(239, 68, 68, 0.2)' }
-                            ]}
+                            xAxisData={objectCountData.hours}
+                            datasets={objectCountData.datasets}
                             height="200%"
                         />
                     </div>
                 </Card>
 
-                {/* Recent Detection Log Table */}
-                <RecentDetectionLog data={recentDetections} />
+                {/* Peak Occupancy - Keeping Mock/Placeholder if no API */}
+                <Card title="Peak Occupancy" className="flex flex-col">
+                    <PeakOccupancyHeatmap />
+                </Card>
+            </div>
+
+            {/* Bottom Row - Detection Log */}
+            <div className="grid grid-cols-1 gap-6">
+                <RecentDetectionLog data={detections} />
             </div>
         </div>
     );
